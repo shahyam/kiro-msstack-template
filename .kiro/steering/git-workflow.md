@@ -11,6 +11,20 @@ inclusion: always
 - Hotfixes: `hotfix/{ticket-id}-short-description`
 - Releases: `release/{version}`
 
+## Micro Commits
+
+- Commit one logical change at a time — not a whole feature in one commit
+- Each commit should pass tests and leave the codebase in a working state
+- Prefer many small commits over one large "WIP" commit
+- Good micro commit examples:
+  - `feat(orders): add Order entity and EF configuration`
+  - `feat(orders): add IOrderRepository interface`
+  - `feat(orders): implement OrderRepository`
+  - `feat(orders): add OrderService with GetById`
+  - `feat(orders): add OrdersController GET endpoint`
+- Never bundle unrelated changes in one commit (e.g. a bug fix + a new feature)
+- Never commit commented-out code, debug logging, or temporary test values
+
 ## Commit Messages
 
 Follow Conventional Commits format:
