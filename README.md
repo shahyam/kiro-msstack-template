@@ -17,12 +17,39 @@ AI agents like Kiro suffer from several well-known problems:
 
 ## How to Use This Template
 
+### Quick Start (5 minutes)
+
+1. **Copy the template:**
+   ```bash
+   git clone https://github.com/shahyam/kiro-msstack-template.git
+   cp -r kiro-msstack-template/.kiro your-project/
+   cp -r kiro-msstack-template/scripts your-project/
+   cp kiro-msstack-template/.env.example your-project/
+   cp kiro-msstack-template/appsettings.example.json your-project/
+   ```
+
+2. **Customize for your project:**
+   - Edit `.kiro/steering/glossary.md` — add your domain entities
+   - Edit `.kiro/steering/project-overview.md` — update stack/structure
+
+3. **Validate:**
+   ```bash
+   cd your-project
+   node scripts/validate-kiro-files.js
+   ```
+
+4. **Open in Kiro** — steering rules load automatically
+
+### Detailed Setup
+
 1. Copy the `.kiro/` folder and `scripts/` folder into the root of your new project
 2. Edit `.kiro/steering/project-overview.md` — update the project name, structure, and tech choices
 3. Edit `.kiro/steering/glossary.md` — add your domain terms (entities, bounded contexts, abbreviations)
 4. Delete any steering or skills files that don't apply to your project
 5. Open the project in Kiro — steering files marked `inclusion: always` load automatically
 6. Use `#` in Kiro chat to manually load steering files marked `inclusion: manual` when needed
+
+For a complete setup checklist, ask Kiro to follow the `setup-new-project` skill.
 
 ## Folder Structure
 
@@ -79,6 +106,33 @@ If you are setting up a new project, read in this order:
 | `write-sql-migration` | Raw SQL migration script or stored procedure |
 | `write-tests` | xUnit unit/integration tests (NSubstitute + SQLite) or Vitest component/hook tests |
 | `setup-ci-pipeline` | GitHub Actions pipelines for .NET + React with build, test, package, deploy to Artifactory |
+| `setup-new-project` | Complete checklist for setting up this template in a new project for the first time |
+
+## Design Philosophy
+
+This template is built on three principles:
+
+1. **Grounding over flexibility** — explicit rules prevent hallucination, even if they feel restrictive
+2. **Credit efficiency** — `fileMatch` and `manual` inclusion keep context small and focused
+3. **Evolvability** — steering files are easy to edit as your project's conventions evolve
+
+## Troubleshooting
+
+**Steering file not loading?**
+- Check front-matter syntax with `node scripts/validate-kiro-files.js`
+- Verify `fileMatchPattern` glob matches your file extensions
+
+**Agent ignoring a rule?**
+- Check if the file is `inclusion: manual` — load it with `#filename` in chat
+- Verify the rule isn't contradicted by another steering file
+
+**Validation script failing?**
+- Ensure Node.js is installed
+- Check file paths in `#[[file:...]]` references exist
+
+**Agent reading too many files?**
+- Check `context-hints.md` — it tells the agent what to read per task
+- Use more specific task descriptions to narrow scope
 
 ## Credit Optimisation Strategy
 

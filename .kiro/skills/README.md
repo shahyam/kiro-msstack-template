@@ -20,6 +20,7 @@ When you ask Kiro to "create a new API endpoint" or "add a new entity", it:
 | `write-sql-migration.md` | Writing raw SQL migration scripts or stored procedures |
 | `write-tests.md` | Writing xUnit unit/integration tests or Vitest frontend tests |
 | `setup-ci-pipeline.md` | GitHub Actions CI/CD pipeline for .NET + React with Artifactory deploy |
+| `setup-new-project.md` | Complete setup checklist for using this template in a new project |
 | `review-code.md` | Review code against all steering standards — outputs Critical / Warning / Suggestion |
 
 ## Tips

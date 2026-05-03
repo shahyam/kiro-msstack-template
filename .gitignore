@@ -1,0 +1,42 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.log
+*.vspscc
+*.vssscc
+.vs/
+.vscode/
+*.DotSettings.user
+
+# Node / React
+node_modules/
+dist/
+build/
+*.tgz
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test results
+TestResults/
+coverage/
+*.trx
+*.cobertura.xml
+
+# Secrets
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+!appsettings.example.json
