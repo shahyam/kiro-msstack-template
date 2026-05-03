@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Validate Kiro Files on Save",
+  "description": "Runs the validation script whenever a steering or skills markdown file is saved, checking front-matter, inclusion values, and file references",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "node scripts/validate-kiro-files.js"
+  }
+}
