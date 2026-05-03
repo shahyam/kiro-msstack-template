@@ -65,6 +65,13 @@ Read in this order:
 1. Load `adr-template.md` manually via `#adr-template` in chat
 2. Check existing ADRs in `/docs/adr/` for prior decisions that may be relevant
 3. Check `do-not-do.md` for constraints that affect the decision
+4. Follow the `generate-adr` skill
+
+## Task: Refactor Code
+
+1. Load `dotnet-standards.md` or `react-standards.md` depending on the file type
+2. Read the file(s) to be refactored and their associated tests
+3. Follow the `refactor-code` skill
 
 ## General Rules for the Agent
 
