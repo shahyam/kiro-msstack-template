@@ -19,6 +19,9 @@ The AI agent must use these exact names — never invent synonyms or alternative
 
 | Term | Type | Description |
 |---|---|---|
+| `User` | Entity | System user with login credentials |
+| `Role` | Entity | Permission group assigned to users |
+| `AuditLog` | Entity | Record of significant system changes |
 | `{Entity}` | Domain Entity | Replace with your actual entity name |
 | `{AggregateRoot}` | Aggregate Root | Replace with your aggregate root name |
 
@@ -34,6 +37,8 @@ The AI agent must use these exact names — never invent synonyms or alternative
 | SPA | Single Page Application |
 | MSSQL | Microsoft SQL Server |
 | ADR | Architecture Decision Record |
+| PII | Personally Identifiable Information |
+| JWT | JSON Web Token |
 
 ## Bounded Contexts
 
@@ -41,6 +46,8 @@ The AI agent must use these exact names — never invent synonyms or alternative
 
 | Context | Responsibility |
 |---|---|
+| `Identity` | Authentication, Authorization, User management |
+| `Catalog` | Product listing, categories, and search (Example) |
 | `{ContextName}` | Replace with actual bounded context |
 
 ## Naming Rules
@@ -49,3 +56,4 @@ The AI agent must use these exact names — never invent synonyms or alternative
 - C# classes: singular PascalCase (`Order`, `CustomerAddress`)
 - React components: singular PascalCase (`OrderList`, `CustomerForm`)
 - API routes: plural kebab-case (`/api/orders`, `/api/customer-addresses`)
+- Enums: singular PascalCase (`OrderStatus`, `UserType`)

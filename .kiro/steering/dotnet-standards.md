@@ -225,3 +225,83 @@ builder.Host.UseSerilog();
 ```
 
 - Required NuGet packages: `Serilog.AspNetCore`, `Serilog.Sinks.Console`, `Serilog.Sinks.File`
+
+## Performance
+
+- Use `AsNoTracking()` on EF Core queries that only read data — avoids change tracking overhead
+- Implement query result caching for frequently-accessed lookups (e.g., product categories, system settings)
+- Use `LIMIT`/`OFFSET` or pagination to avoid loading entire result sets
+- Prefer batch operations (`AddRange`, `UpdateRange`) over individual entity saves
+- Use prepared statements with EF Core for bulk operations
+- Implement request/response compression with gzip middleware
+- Use `.Any()` instead of `.Count() > 0` for existence checks
+- Apply database indexes to foreign keys and frequently-filtered columns
+- Monitor query performance with SQL Server Query Analyzer or Application Insights
+
+```csharp
+// ✅ Good — caching lookups, pagination, AsNoTracking
+public class OrderService
+{
+    private static readonly Dictionary<int, Category> CategoryCache = new();
+
+    public async Task<List<Order>> GetOrdersPagedAsync(
+        int pageNumber, int pageSize, CancellationToken ct)
+    {
+        var skip = (pageNumber - 1) * pageSize;
+        return await _context.Orders
+            .AsNoTracking()
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync(ct);
+    }
+
+    public async Task<bool> AnyOrdersAsync(int customerId, CancellationToken ct) =>
+        await _context.Orders
+            .Any(o => o.CustomerId == customerId, ct); // ✅ efficient existence check
+}
+
+// ❌ Bad — no pagination, tracking overhead, inefficient count
+public async Task<List<Order>> GetAllOrdersAsync() =>
+    await _context.Orders.ToListAsync(); // ❌ loads entire table
+
+public async Task<bool> AnyOrdersAsync(int customerId) =>
+    await _context.Orders.Where(o => o.CustomerId == customerId).Count() > 0; // ❌ inefficient
+```
+
+## Security
+
+- Create database users with minimal required permissions per application/service
+- Enable SQL Server Transparent Data Encryption (TDE) on production databases
+- Validate and sanitize all user inputs — use FluentValidation or Data Annotations
+- Implement rate limiting on API endpoints to prevent abuse
+- Use `[Authorize]` attribute on all endpoints that require authentication
+- Implement proper CORS policy — whitelist specific origins, not `AllowAnyOrigin`
+- Never log sensitive data (passwords, PII, payment info) — use `[LogMasking]` or custom formatters
+- Use HTTPS everywhere — never HTTP in production
+- Implement CSRF protection for state-changing operations
+- Rotate secrets regularly and store in secure vaults (Azure Key Vault, 1Password, etc.)
+
+```csharp
+// ✅ Good — CORS restricted, [Authorize] applied
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("https://frontend.example.com")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
+[ApiController]
+public class OrdersController : ControllerBase
+{
+    [HttpPost]
+    [Authorize(Roles = "Admin")] // ✅ authorization enforced
+    public async Task<ActionResult> CreateAsync([FromBody] CreateOrderRequest req) { ... }
+}
+
+// ❌ Bad — CORS AllowAnyOrigin, no rate limiting
+options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()); // ❌ security risk
+```

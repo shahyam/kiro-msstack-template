@@ -40,6 +40,21 @@ public class {Entity}ServiceTests
         result.Should().NotBeNull();
         result!.Id.Should().Be(1);
     }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(null)]
+    public async Task CreateAsync_WhenNameIsInvalid_ThrowsValidationException(string name)
+    {
+        // Arrange
+        var request = new Create{Entity}Request(name);
+
+        // Act
+        var act = () => _sut.CreateAsync(request, default);
+
+        // Assert
+        await act.Should().ThrowAsync<ValidationException>();
+    }
 }
 ```
 

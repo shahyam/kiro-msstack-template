@@ -1,5 +1,9 @@
 # Kiro AI Agent Configuration — Microsoft Stack Template
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Validation](https://github.com/shahyam/kiro-msstack-template/actions/workflows/validate-template.yml/badge.svg)](https://github.com/shahyam/kiro-msstack-template/actions)
+[![GitHub stars](https://img.shields.io/github/stars/shahyam/kiro-msstack-template?style=social)](https://github.com/shahyam/kiro-msstack-template)
+
 This repository is a **reusable Kiro AI agent configuration template** for projects built on the Microsoft stack (.NET 9, React + Vite, MSSQL). It is not application code — it is the **foundation you copy into a new project** to give your AI agent accurate, grounded, project-specific knowledge from day one.
 
 ## Purpose
@@ -18,6 +22,20 @@ AI agents like Kiro suffer from several well-known problems:
 ## How to Use This Template
 
 ### Quick Start (5 minutes)
+
+**Option A: Use Bootstrap Script (Recommended)**
+```bash
+git clone https://github.com/shahyam/kiro-msstack-template.git
+cd your-project
+bash kiro-msstack-template/scripts/init-project.sh .
+```
+The script will:
+- Copy template files
+- Ask for your project name and tech stack
+- Auto-remove unused skills
+- Validate configuration
+
+**Option B: Manual Setup**
 
 1. **Copy the template:**
    ```bash
@@ -107,6 +125,9 @@ If you are setting up a new project, read in this order:
 | `write-tests` | xUnit unit/integration tests (NSubstitute + SQLite) or Vitest component/hook tests |
 | `setup-ci-pipeline` | GitHub Actions pipelines for .NET + React with build, test, package, deploy to Artifactory |
 | `setup-new-project` | Complete checklist for setting up this template in a new project for the first time |
+| `refactor-code` | Step-by-step plan and execution for cleaning up existing code |
+| `generate-adr` | Standardized Architecture Decision Record for significant changes |
+| `review-code` | Comprehensive multi-layer audit against project standards |
 
 ## Design Philosophy
 
@@ -115,6 +136,21 @@ This template is built on three principles:
 1. **Grounding over flexibility** — explicit rules prevent hallucination, even if they feel restrictive
 2. **Credit efficiency** — `fileMatch` and `manual` inclusion keep context small and focused
 3. **Evolvability** — steering files are easy to edit as your project's conventions evolve
+
+## Examples & Learning
+
+- **[EXAMPLES.md](EXAMPLES.md)** — Real-world projects using this template with customizations shown
+  - FoodDelivery platform (fullstack .NET + React)
+  - Analytics SaaS (backend-only .NET)
+  - E-Commerce microservices
+  - Admin dashboard (minimal backend)
+  - How to adapt the template for your project
+
+- **[ROADMAP.md](ROADMAP.md)** — Planned improvements and future phases
+  - Phase 2: Blazor, PostgreSQL, Microservices support
+  - Phase 3: Azure cloud native patterns
+  - Phase 4: Testing & integration tests
+  - Contribution areas for the community
 
 ## Troubleshooting
 

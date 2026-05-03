@@ -1,0 +1,60 @@
+name: Validate Kiro Template
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - '.kiro/**'
+      - 'scripts/validate-kiro-files.js'
+      - '*.json'
+      - '*.md'
+  push:
+    branches: [main, master]
+    paths:
+      - '.kiro/**'
+      - 'scripts/validate-kiro-files.js'
+      - '*.json'
+      - '*.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate steering and skills files
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run validation script
+        run: node scripts/validate-kiro-files.js
+        continue-on-error: false
+
+      - name: Check for broken markdown links
+        run: |
+          # Simple check for #[[file:X]] references
+          grep -r "#\[\[file:" .kiro/ | while read line; do
+            file=$(echo "$line" | grep -oP 'file:\K[^]]+' | head -1)
+            if [ ! -z "$file" ] && [ ! -f "$file" ]; then
+              echo "❌ Broken reference: $file in $line"
+              exit 1
+            fi
+          done
+        continue-on-error: false
+
+      - name: Validate JSON syntax
+        run: |
+          for file in *.json; do
+            if [ -f "$file" ]; then
+              node -e "JSON.parse(require('fs').readFileSync('$file', 'utf8'))" || exit 1
+              echo "✅ $file is valid JSON"
+            fi
+          done
+
+      - name: Report success
+        if: success()
+        run: echo "✅ Template validation passed!"

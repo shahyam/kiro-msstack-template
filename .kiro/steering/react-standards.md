@@ -174,3 +174,151 @@ const handleResponse = (data: any) => { ... }; // ❌ any kills type safety
 - Mock API calls using MSW (Mock Service Worker)
 - Unit tests required for all hooks, services, and utility functions
 - Place test files alongside source: `{Component}.test.tsx`
+
+## Accessibility (a11y)
+
+- Use semantic HTML: `<button>`, `<nav>`, `<main>`, `<header>` instead of `<div role="button">`
+- Include descriptive `aria-label` or `aria-labelledby` on interactive elements without visible text
+- Ensure all form inputs have associated `<label>` elements
+- Use `aria-required`, `aria-invalid`, `aria-describedby` for form validation feedback
+- Maintain minimum color contrast ratio of 4.5:1 for text (WCAG AA standard)
+- Implement keyboard navigation — all interactive elements accessible via Tab, Enter, Space, Escape
+- Use `aria-live` regions for dynamic content updates
+- Include skip-to-main-content link at top of page
+- Test with screen readers (NVDA, JAWS) and accessibility tools (axe, Lighthouse)
+
+```tsx
+// ✅ Good — semantic HTML, labels, ARIA labels, color contrast
+function OrderForm() {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  return (
+    <main className="order-form">
+      <h1>Place Your Order</h1>
+      <form aria-label="Order form">
+        <div className="form-group">
+          <label htmlFor="customer-name">Customer Name</label>
+          <input
+            id="customer-name"
+            type="text"
+            aria-required="true"
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? "name-error" : undefined}
+          />
+          {errors.name && (
+            <span id="name-error" className="error" role="alert">
+              {errors.name}
+            </span>
+          )}
+        </div>
+        <button type="submit" className="btn-primary">Submit Order</button>
+      </form>
+    </main>
+  );
+}
+
+// ❌ Bad — no semantic HTML, no labels, no ARIA, divs for buttons
+function OrderForm() {
+  return (
+    <div>
+      <div>Place Your Order</div>
+      <div>
+        <div>Customer Name</div>
+        <input type="text" /> {/* ❌ no label, no aria-required */}
+      </div>
+      <div className="btn" onClick={submit}>Submit</div> {/* ❌ not a button */}
+    </div>
+  );
+}
+```
+
+## Performance
+
+- Use `React.memo` to prevent unnecessary re-renders of expensive components
+- Use `useMemo` for expensive computations — memoize dependent values
+- Use `useCallback` for callbacks passed to memoized child components
+- Implement code splitting with `React.lazy` and `Suspense` on route pages
+- Use React DevTools Profiler to identify and fix performance bottlenecks
+- Lazy-load images with `loading="lazy"` or intersection observer
+- Avoid creating objects/arrays in component body — move to module level or useMemo
+
+```tsx
+// ✅ Good — memo, useCallback, useMemo
+interface OrderListProps {
+  orders: OrderResponse[];
+  onSelectOrder: (id: number) => void;
+}
+
+function OrderListItem({ order, onSelectOrder }: OrderListProps['orders'][0] & { onSelectOrder: (id: number) => void }) {
+  const handleClick = useCallback(() => onSelectOrder(order.id), [order.id, onSelectOrder]);
+  return <div onClick={handleClick}>{order.id}</div>;
+}
+
+const MemoizedOrderListItem = React.memo(OrderListItem);
+
+function OrderList({ orders, onSelectOrder }: OrderListProps) {
+  const memoizedHandler = useCallback(onSelectOrder, [onSelectOrder]);
+  const expensiveValue = useMemo(() => orders.filter(o => o.total > 1000), [orders]);
+
+  return (
+    <div>
+      {expensiveValue.map(order => (
+        <MemoizedOrderListItem
+          key={order.id}
+          order={order}
+          onSelectOrder={memoizedHandler}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ❌ Bad — no memoization, inline objects, no optimization
+function OrderList({ orders, onSelectOrder }) {
+  return (
+    <div>
+      {orders.map(order => (
+        <OrderListItem
+          key={order.id}
+          order={order}
+          onSelectOrder={() => onSelectOrder(order.id)} // ❌ new function every render
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+## Security
+
+- Never store sensitive data (tokens, secrets, PII) in localStorage
+- Sanitize HTML if rendering user-generated content — use `DOMPurify` library
+- Validate all API responses — never trust the server blindly
+- Use Content Security Policy (CSP) headers to prevent XSS attacks
+- Implement secure dependencies — use `npm audit` and keep packages updated
+- Never expose environment variables or API keys in bundle — use backend proxies for sensitive endpoints
+
+```ts
+// ✅ Good — tokens in httpOnly cookies, XSS prevention
+// API calls use httpOnly cookies automatically (withCredentials: true)
+export async function loginUser(username: string, password: string) {
+  const response = await apiClient.post('/auth/login', { username, password });
+  // Token stored in httpOnly cookie by server, not accessible to JS
+  return response.data;
+}
+
+// ✅ Good — sanitize before rendering
+import DOMPurify from 'dompurify';
+
+function UserComment({ html }: { html: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />;
+}
+
+// ❌ Bad — token in localStorage, exposed to XSS
+localStorage.setItem('authToken', response.data.token); // ❌ vulnerable
+
+// ❌ Bad — raw user HTML
+function UserComment({ html }: { html: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: html }} />; // ❌ XSS risk
+}
+```
