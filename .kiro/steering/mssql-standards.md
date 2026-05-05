@@ -126,3 +126,9 @@ dotnet ef database update --project src/Infrastructure --startup-project src/Api
 
 # ❌ Never edit an existing migration file — create a new one instead
 ```
+
+## Related Skills
+
+- #[[file:.kiro/skills/create-ef-entity.md]]
+- #[[file:.kiro/skills/write-sql-migration.md]]
+- #[[file:.kiro/skills/review-code.md]]

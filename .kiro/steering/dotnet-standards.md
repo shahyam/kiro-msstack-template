@@ -305,3 +305,9 @@ public class OrdersController : ControllerBase
 // ❌ Bad — CORS AllowAnyOrigin, no rate limiting
 options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()); // ❌ security risk
 ```
+
+## Related Skills
+
+- #[[file:.kiro/skills/create-api-endpoint.md]]
+- #[[file:.kiro/skills/create-ef-entity.md]]
+- #[[file:.kiro/skills/review-code.md]]

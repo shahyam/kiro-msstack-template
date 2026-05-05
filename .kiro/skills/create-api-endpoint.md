@@ -57,3 +57,8 @@ public interface I{Entity}Service
     Task<{Entity}Response> CreateAsync(Create{Entity}Request request, CancellationToken ct);
 }
 ```
+
+## Related Steering
+
+- #[[file:.kiro/steering/dotnet-standards.md]]
+- #[[file:.kiro/steering/project-overview.md]]

@@ -74,3 +74,8 @@ export async function create{Entity}(payload: Create{Entity}Request) {
   return data;
 }
 ```
+
+## Related Steering
+
+- #[[file:.kiro/steering/react-standards.md]]
+- #[[file:.kiro/steering/project-overview.md]]

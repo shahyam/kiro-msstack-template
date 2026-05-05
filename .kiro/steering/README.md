@@ -29,6 +29,26 @@ Steering files inject rules and context into every Kiro agent interaction (or se
 | `context-hints.md` | always | Tells the agent which files to read first for common tasks |
 | `adr-template.md` | manual | Architecture Decision Record template — load when making arch decisions |
 
+## Versioning
+
+The Kiro configuration is versioned to track changes in agent behavior and project standards. Major updates to steering files should be accompanied by a version bump and changelog entry.
+
+Current Version: **1.0.0**
+
+## Changelog
+
+- **2026-05-05 (1.0.0):** Initial project steering setup. Added standards for React, .NET, MSSQL, and Git.
+
+## Adding a New Steering File
+
+Create a new `.md` file in this folder with:
+1. A front-matter block with `inclusion` (always, fileMatch, or manual)
+2. A `# {Topic} Standards` heading
+3. A `## General` section for high-level rules
+4. Specific sections for sub-topics (e.g., `## Performance`, `## Security`)
+5. Code examples using ✅ for good patterns and ❌ for bad ones
+6. A `## Related Skills` section linking to relevant files in `.kiro/skills/`
+
 ## Tips
 
 - Keep each file focused on one concern — shorter files = fewer tokens = lower cost

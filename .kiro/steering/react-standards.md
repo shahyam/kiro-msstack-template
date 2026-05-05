@@ -250,3 +250,8 @@ function UserComment({ html }: { html: string }) {
   return <div dangerouslySetInnerHTML={{ __html: html }} />; // ❌ XSS risk
 }
 ```
+
+## Related Skills
+
+- #[[file:.kiro/skills/create-react-component.md]]
+- #[[file:.kiro/skills/review-code.md]]
